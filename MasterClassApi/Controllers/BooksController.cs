@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MasterClassApi.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace MasterClassApi.Controllers
         }
 
         // GET: api/Books/5
-        [Authorize(Roles ="Admin,Publisher")]
+        [Authorize(Roles ="Admin,Publisher", Policy ="SolidQDomain")]
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
         {
@@ -29,6 +30,7 @@ namespace MasterClassApi.Controllers
 
         // POST: api/Books
         [Authorize(Roles ="Admin, Publisher")]
+        
         [HttpPost]
         public void Post([FromBody] string value)
         {
@@ -42,7 +44,7 @@ namespace MasterClassApi.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", Policy = "UADomain")]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

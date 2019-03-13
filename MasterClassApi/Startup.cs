@@ -1,8 +1,10 @@
 ﻿using System.Text;
 using MasterClassApi.Core.Services;
+using MasterClassApi.Security;
 using MasterClassApi.Services;
 using MasterClassApi.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,19 @@ namespace MasterClassApi
             services.AddCors();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            #region Authorization
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SolidQDomain", policy => policy.Requirements.Add(new EmailDomainRequirement("solidq.com")));
+                options.AddPolicy("UADomain", policy => policy.Requirements.Add(new EmailDomainRequirement("ua.es")));
+            });
+            services.AddSingleton<IAuthorizationHandler, EmailDomainAuthHandler>();
+
+            #endregion
+
+
             #region "Configuration"
 
             var jwtSettings = Configuration.GetSection("JwtSettings").Get<JwtSettings>();
@@ -40,10 +55,11 @@ namespace MasterClassApi
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                
             })
             .AddJwtBearer(jwtOptions =>
             {
-
+                
                 jwtOptions.RequireHttpsMetadata = false; //Only in dev environment!
                 jwtOptions.TokenValidationParameters = new TokenValidationParameters
                 {
