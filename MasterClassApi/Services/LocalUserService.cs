@@ -19,8 +19,8 @@ namespace MasterClassApi.Services
         private readonly JwtSettings jwtSettings;
         private List<User> users = new List<User>()
         {
-            new User{Id = 1, Name = "Guillermo", LastName="Pérez", Email="gperez@solidq.com",Password="test",Username="gperez"},
-            new User{Id = 2, Name = "Miguel", LastName="López", Email="mlopez@solidq.com",Password="test",Username="mlopez"}
+            new User{Id = 1, Name = "Guillermo", LastName="Pérez", Email="gperez@solidq.com",Password="test",Username="gperez", Roles = new []{"User","Admin" }},
+            new User{Id = 2, Name = "Miguel", LastName="López", Email="mlopez@solidq.com",Password="test",Username="mlopez", Roles= new []{"User","Publisher" } }
         };
 
         public LocalUserService(IOptions<JwtSettings> jwtSettings)
@@ -51,13 +51,17 @@ namespace MasterClassApi.Services
                 {
                     new Claim(ClaimTypes.Name,$"{user.LastName}, {user.Name}"),
                     new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, "User"),
                     new Claim(ClaimTypes.Email, user.Email), 
 
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+            foreach(var role in user.Roles)
+            {
+                tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
+            
             var token = handler.CreateToken(tokenDescriptor);
             
             return handler.WriteToken(token);

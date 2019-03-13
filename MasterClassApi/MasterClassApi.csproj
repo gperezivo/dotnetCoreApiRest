@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <DockerTargetOS>Linux</DockerTargetOS>
     <UserSecretsId>7b5f0a68-127f-41f7-8460-397dcbdc06cb</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/639c11bb-beb2-4cc4-b281-53126f53f9a5/resourcegroups/rg-gperez/providers/microsoft.insights/components/MasterClassApi-ai</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/639c11bb-beb2-4cc4-b281-53126f53f9a5/resourcegroups/rg-gperez/providers/microsoft.insights/components/MasterClassApi-ai</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.1916590" />
@@ -19,6 +22,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MasterClassApi.Core\MasterClassApi.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
 </Project>
